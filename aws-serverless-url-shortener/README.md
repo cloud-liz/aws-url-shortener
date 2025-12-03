@@ -27,5 +27,6 @@ This project demonstrates serverless architecture, routing, UUID generation, and
 
 ## 📈 Architecture Diagram
 
-<img width="375" height="467" alt="Screenshot 2025-12-02 at 13 49 20" src="https://github.com/user-attachments/assets/037da2a8-8bfa-445f-8043-d05ddbdd809c" />
+<img width="375" height="467" alt="Screenshot 2025-12-02 at 13 49 20" src="https://github.com/user-attachments/assets/e1db78d1-7c41-45c1-a25e-3cb770b07e2f" />
+
 
