@@ -1,0 +1,15 @@
+{
+  "TableName": "UrlShortener",
+  "PrimaryKey": {
+    "PartitionKey": "shortId",
+    "Type": "String"
+  },
+  "Attributes": {
+    "longUrl": "String",
+    "clicks": "Number",
+    "createdAt": "String",
+    "ttl": "Number (optional)"
+  },
+  "Notes": "Table created manually in AWS Console for Phase 2."
+}
+

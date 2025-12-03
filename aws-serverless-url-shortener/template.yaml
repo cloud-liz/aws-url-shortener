@@ -1,0 +1,35 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: Simple URL shortener
+
+Globals:
+  Function:
+    Timeout: 5
+    Runtime: python3.12
+
+Resources:
+
+  CreateShortUrlFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: src/createShortUrl/index.handler
+      CodeUri: .
+      Events:
+        ApiEvent:
+          Type: Api
+          Properties:
+            Path: /create
+            Method: POST
+
+  RedirectFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: src/redirect/index.handler
+      CodeUri: .
+      Events:
+        ApiEvent:
+          Type: Api
+          Properties:
+            Path: /{shortId}
+            Method: GET
+
