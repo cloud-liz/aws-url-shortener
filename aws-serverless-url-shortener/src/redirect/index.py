@@ -1,28 +1,26 @@
 import boto3
-import os
-
 dynamodb = boto3.resource('dynamodb')
-table = dynamodb.Table(os.environ['TABLE_NAME'])
+table = dynamodb.Table('UrlTable')
 
 def lambda_handler(event, context):
-    short_id = event["pathParameters"]["shortId"]
+    short_id = event['pathParameters']['id']
 
-    response = table.get_item(Key={"shortId": short_id})
-    item = response.get("Item")
+    resp = table.get_item(Key={'id': short_id})
+    item = resp.get('Item')
 
     if not item:
-        return {"statusCode": 404, "body": "Not Found"}
+        return {'statusCode': 404, 'body': 'Not found'}
 
-    long_url = item["longUrl"]
-
+    # update click counter
     table.update_item(
-        Key={"shortId": short_id},
-        UpdateExpression="SET clicks = clicks + :val",
-        ExpressionAttributeValues={":val": 1}
+        Key={'id': short_id},
+        UpdateExpression='SET clicks = clicks + :inc',
+        ExpressionAttributeValues={':inc': 1}
     )
 
     return {
-        "statusCode": 301,
-        "headers": {"Location": long_url}
+        "statusCode": 302,
+        "headers": {"Location": item['long_url']},
+        "body": ""
     }
 
