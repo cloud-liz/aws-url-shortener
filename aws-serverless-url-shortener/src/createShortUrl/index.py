@@ -1,23 +1,33 @@
-import json, uuid, boto3
-
-dynamodb = boto3.resource('dynamodb')
-table = dynamodb.Table('UrlTable')
+import json
 
 def lambda_handler(event, context):
-    body = json.loads(event['body'])
-    long_url = body['url']
+    # Determine if 'body' exists (proxy integration) or use event directly (non-proxy)
+    if 'body' in event:
+        # Proxy integration: body is a JSON string
+        try:
+            body = json.loads(event['body'])
+        except json.JSONDecodeError:
+            return {
+                "statusCode": 400,
+                "body": json.dumps({"error": "Invalid JSON in body"})
+            }
+    else:
+        # Non-proxy integration: event is already a dict
+        body = event
 
-    short_id = str(uuid.uuid4())[:8]  # simple short ID
+    # Get the URL from the body
+    url = body.get('url')
+    if not url:
+        return {
+            "statusCode": 400,
+            "body": json.dumps({"error": "Missing 'url' parameter"})
+        }
 
-    table.put_item(Item={
-        'id': short_id,
-        'long_url': long_url,
-        'clicks': 0
-    })
+    # TODO: Replace this with actual URL shortening logic
+    short_url = "abc123"
 
+    # Return response (always as JSON string)
     return {
-        'statusCode': 200,
-        'body': json.dumps({
-            'id': short_id
-        })
+        "statusCode": 200,
+        "body": json.dumps({"short_url": short_url})
     }
