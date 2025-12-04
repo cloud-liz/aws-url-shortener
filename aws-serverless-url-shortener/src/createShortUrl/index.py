@@ -1,24 +1,23 @@
-import json
-import uuid
-import boto3
-import os
+import json, uuid, boto3
 
 dynamodb = boto3.resource('dynamodb')
-table = dynamodb.Table(os.environ['TABLE_NAME'])
+table = dynamodb.Table('UrlTable')
 
 def lambda_handler(event, context):
-    body = json.loads(event.get("body", "{}"))
-    long_url = body.get("url")
+    body = json.loads(event['body'])
+    long_url = body['url']
 
-    short_id = str(uuid.uuid4())[:8]
+    short_id = str(uuid.uuid4())[:8]  # simple short ID
 
     table.put_item(Item={
-        "shortId": short_id,
-        "longUrl": long_url,
-        "clicks": 0
+        'id': short_id,
+        'long_url': long_url,
+        'clicks': 0
     })
 
     return {
-        "statusCode": 200,
-        "body": json.dumps({"shortUrl": f"https://your-api/{short_id}"})
+        'statusCode': 200,
+        'body': json.dumps({
+            'id': short_id
+        })
     }
